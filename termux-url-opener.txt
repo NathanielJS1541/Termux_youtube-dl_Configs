@@ -1,0 +1,83 @@
+#!/bin/bash
+
+# Get the URL
+#INPUT=$1
+URL=$1
+
+# Find paths to the required programs
+YOUTUBEDL=$(which youtube-dl)
+NODE_ENV=$(which node)
+SPOTIFYDL=$(which spotifydl)
+
+# Base Output Paths
+AUDIO_DIR="$HOME/storage/shared/Music"
+VIDEO_DIR="$HOME/storage/shared/Movies/%(extractor)s"
+
+# Remove junk before the URL:
+#if [[ $INPUT == *"https://"* ]]; then
+#	URL="https://"${INPUT#*https://*}
+#else
+#	URL=$INPUT
+#
+
+clear
+
+# Spotify Shows
+if [[ $URL == *"open.spotify.com/show"* ]]; then
+    # Download the music to audio directory.
+    $YOUTUBEDL $URL --playlist-reverse -o "$AUDIO_DIR/%(playlist_title)s/%(playlist_index)s_%(title)s.%(ext)s"
+
+# Spotify Episodes
+elif [[ $URL == *"open.spotify.com/episode"* ]]; then
+    # Download the music to audio directory.
+    $YOUTUBEDL $URL -o "$AUDIO_DIR/%(series)s/%(title)s.%(ext)s"
+
+# Spotify Songs, albums and playlists
+elif [[ $URL == *"open.spotify.com"* ]]; then
+    # check if directory exist or not
+    if [[ ! -d $SONG_DIR ]]; then
+        # directory doesn't exist create it for use.
+        mkdir $SONG_DIR
+	fi
+    
+    # Download the song to music directory.
+    $NODE_ENV $SPOTIFYDL $URL -o $AUDIO_DIR
+
+# YouTube
+elif [[ $URL == *"youtube.com"* ]] || [[ $URL == *"youtu.be"* ]]; then
+    # Download the video to movies directory.
+    $YOUTUBEDL $URL -o "$VIDEO_DIR/%(uploader)s/%(title)s.%(ext)s"
+
+# TikTok
+elif [[ $URL == *"vm.tiktok.com"* ]]; then
+    # Download the video to movies directory.
+    $YOUTUBEDL $URL -o "$VIDEO_DIR/%(uploader)s_%(upload_date)s_%(id)s.%(ext)s"
+
+# Instagram
+elif [[ $URL == *"instagram.com"* ]]; then
+    # Download the video to movies directory.
+    $YOUTUBEDL $URL -o "$VIDEO_DIR/%(uploader_id)s_%(upload_date)s_%(id)s.%(ext)s"
+
+# Facebook
+elif [[ $URL == *"facebook.com"* ]] || [[ $URL == *"fb.watch"* ]]; then
+    # Download the video to movies directory.
+    $YOUTUBEDL $URL -o "$VIDEO_DIR/%(uploader)s_%(upload_date)s_%(id)s.%(ext)s"
+
+# Twitter
+elif [[ $URL == *"twitter.com"* ]]; then
+    # Download the video to movies directory.
+    $YOUTUBEDL $URL -o "$VIDEO_DIR/%(uploader)s_%(upload_date)s_%(id)s.%(ext)s"
+
+# Twitch
+elif [[ $URL == *"twitch.tv"* ]]; then
+    # Download the video to movies directory.
+    $YOUTUBEDL $URL -o "$VIDEO_DIR/%(uploader)s/%(title)s_%(id)s.%(ext)s"
+
+# Generic
+else
+    # Download the video to movies directory.
+    $YOUTUBEDL $URL -o "$VIDEO_DIR/%(uploader)s_%(upload_date)s_%(title)s.%(ext)s"
+fi
+
+# Wait for user to be able to read any messages before exiting
+read -n 1 -s -p "Press any key to exit..."

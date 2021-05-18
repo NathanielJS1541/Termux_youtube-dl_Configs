@@ -1,0 +1,7 @@
+# These are just the defaults in the case that the termux-url-extractor does not handle a given website
+--no-mtime
+-o /data/data/com.termux/files/home/storage/shared/Movies/%(extractor)s/%(title)s_%(id)s.%(ext)s
+-f "bestvideo+bestaudio/best"
+--restrict-filenames
+--add-metadata
+--exec termux-media-scan
