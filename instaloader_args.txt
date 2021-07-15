@@ -1,0 +1,5 @@
+--filename-pattern={profile}_{date_utc:%Y-%m-%d}_{shortcode}
+--no-captions
+--no-metadata-json
+--no-profile-pic
+--no-video-thumbnails
