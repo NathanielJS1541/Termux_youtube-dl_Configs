@@ -16,10 +16,10 @@ It is **important** that these are both installed from the **same** appstore, wh
 - Install Termux:API with `pkg install termux-api`
 - Set up file access with `termux-setup-storage`
 
-## Install Python, NodeJS and nmp, and ffmpeg
+## Install [Python](https://www.python.org/), [NodeJS and nmp](https://nodejs.org/en/), and [ffmpeg](https://ffmpeg.org/)
 - Type `pkg install python nodejs ffmpeg`
 
-## Install and Configure youtube-dl
+## Install and Configure [youtube-dl](https://github.com/ytdl-org/youtube-dl)
 - First make sure pip is up to date with `pip install -U pip`
 - Type `pip install youtube-dl`
 - Check if the directories we need already exist with `ls -al`. We need one called `.config` **(The dot is important!)** and `bin`.
@@ -37,8 +37,20 @@ It is **important** that these are both installed from the **same** appstore, wh
 - Open the termux-url-opener that I provided in another app. Copy the entire contents and paste into the termux window as before.
 - Again, press `CTRL + X` and press `y` to save.
 
-## Install spotify-dl
+## Install [spotify-dl](https://github.com/SwapnilSoni1999/spotify-dl)
 - Type `npm install -g spotify-dl`
+
+## Install and Configure [instaloader](https://github.com/instaloader/instaloader)
+- Type `pip install instaloader`
+- To create the configuration file for instaloader, from the home directory type `nano bin/instaloader_args.txt`
+- As with the youtube-dl config, copy the contents of the `instaloader_args.txt` file from this repo and paste them into Termux.
+- If you don't plan on saving posts from private accounts, you're done here. Just press `CTRL + X` to exit and then `y` to save. However if
+  you would like to save posts from private accounts, follow the next steps.
+- Create a new line at the top of the file and type in `--login=` and then your instagram username. Beware of downloading enormous amounts of posts if
+  logged in, though. It is likely to get your account suspended if it is deemed "supicious".
+  - If you encounter login errors, please follow the **Login Error** section of the [Instaloader Troubleshooting Guide](https://instaloader.github.io/troubleshooting.html)
+- If you do not want to login interactively, you *can* add a new line with `--password=`, but that doesn't mean you should as this is horrible security practice.
+- Finally, of course, you can save and exit with `CTRL + X`, and then `y`.
 
 # Usage
 - From any app that supports sharing, simply click share, and click on *Termux* in the app list. A popup should appear showing the download
@@ -67,6 +79,7 @@ It is **important** that these are both installed from the **same** appstore, wh
 - You can check if any pip packages need updating by typing `pip list -o`. You can then update each of these packages with `pip install -U [PACKAGE]`.
   - If pip is on the list, you should first do `pip install -U pip`
   - In the case of youtube-dl, this would be `pip install -U youtube-dl`.
+  - In the case this is instaloader, type `pip install -U instaloader`
 
 ## Using npm to Update spotify-dl
 - To update packages installed with npm, simply run `npm update -g`
