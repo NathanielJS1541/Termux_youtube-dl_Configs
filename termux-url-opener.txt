@@ -48,7 +48,7 @@ elif [[ $URL == *"open.spotify.com"* ]]; then
 # YouTube
 elif [[ $URL == *"youtube.com"* ]] || [[ $URL == *"youtu.be"* ]]; then
 	# Download the video to movies directory.
-	$YOUTUBEDL $URL -o "$VIDEO_DIR/%(uploader)s/%(title)s.%(ext)s"
+	$YOUTUBEDL $URL -o "$VIDEO_DIR/%(uploader)s_%(title)s.%(ext)s"
 
 # TikTok
 elif [[ $URL == *"vm.tiktok.com"* ]]; then
@@ -62,13 +62,13 @@ elif [[ $URL == *"instagram.com"* ]]; then
 	if [[ $URL == *"instagram.com/p/"* ]]; then
 		SHORTCODE=${URL#*/p/*}
 		SHORTCODE=${SHORTCODE%*/*}
-		SAVEFILE=$($INSTALOADER +instaloader_args.txt --dirname-pattern=$PHOTO_DIR -- -$SHORTCODE)
+		SAVEFILE=$($INSTALOADER +$HOME/instaloader_args.txt --dirname-pattern=$PHOTO_DIR -- -$SHORTCODE)
 	# Otherwise, hope that it is a profile
 	else
 		# Remove junk from the end of the URL
 		USERNAME=${URL#*/p/*}
 		USERNAME=${USERNAME%*/*}
-		SAVEFILE=$($INSTALOADER +instaloader_args.txt --dirname-pattern=$PHOTO_DIR $USERNAME)
+		SAVEFILE=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR $USERNAME)
 	fi
 	# Update gallery
 	$MEDIA_SCAN $SAVEFILE
@@ -86,7 +86,7 @@ elif [[ $URL == *"twitter.com"* ]]; then
 # Twitch
 elif [[ $URL == *"twitch.tv"* ]]; then
 	# Download the video to movies directory.
-	$YOUTUBEDL $URL -o "$VIDEO_DIR/%(uploader)s/%(title)s_%(id)s.%(ext)s"
+	$YOUTUBEDL $URL -o "$VIDEO_DIR/%(uploader)s_%(title)s_%(id)s.%(ext)s"
 
 # Generic
 else
