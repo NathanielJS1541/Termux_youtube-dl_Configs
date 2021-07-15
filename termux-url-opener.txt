@@ -62,7 +62,7 @@ elif [[ $URL == *"instagram.com"* ]]; then
 	if [[ $URL == *"instagram.com/p/"* ]]; then
 		SHORTCODE=${URL#*/p/*}
 		SHORTCODE=${SHORTCODE%*/*}
-		SAVEFILE=$($INSTALOADER +$HOME/instaloader_args.txt --dirname-pattern=$PHOTO_DIR -- -$SHORTCODE)
+		SAVEFILE=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR -- -$SHORTCODE)
 	# Otherwise, hope that it is a profile
 	else
 		# Remove junk from the end of the URL
