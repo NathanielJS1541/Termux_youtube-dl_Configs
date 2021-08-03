@@ -62,18 +62,28 @@ elif [[ $URL == *"instagram.com"* ]]; then
 	if [[ $URL == *"instagram.com/p/"* ]]; then
 		SHORTCODE=${URL#*/p/*}
 		SHORTCODE=${SHORTCODE%*/*}
-		SAVEFILE=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR -- -$SHORTCODE)
+		OUTPUT=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR -- -$SHORTCODE)
 	# Otherwise, hope that it is a profile
 	else
 		# Remove junk from the end of the URL
 		USERNAME=${URL#*/p/*}
 		USERNAME=${USERNAME%*/*}
-		SAVEFILE=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR $USERNAME)
+		OUTPUT=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR $USERNAME)
 	fi
-	# Display output to user
-	echo $SAVEFILE
+	# Split the instaloader output into an array using " " as a deliminator
+	OUTPUT_ARRAY=($(echo $OUTPUT | tr " " "\n"))
+	# Cycle through each array element and test whether it is a file paths
+	for line in "${OUTPUT_ARRAY[@]}"
+		# Display that line of the output
+		echo $line
+		# If the line contains the start of the file paths
+		if [[ $line == $PHOTO_DIR* ]]
+			# Add the line to an array to be scanned
+			SAVEFILES+=$line
+		fi
+	done
 	# Update gallery
-	$MEDIA_SCAN $SAVEFILE
+	$MEDIA_SCAN $SAVEFILES
 
 # Facebook
 elif [[ $URL == *"facebook.com"* ]] || [[ $URL == *"fb.watch"* ]]; then
