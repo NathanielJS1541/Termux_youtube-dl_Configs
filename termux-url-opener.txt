@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -
 
 # Get the URL
 #INPUT=$1
@@ -70,6 +70,8 @@ elif [[ $URL == *"instagram.com"* ]]; then
 		USERNAME=${USERNAME%*/*}
 		SAVEFILE=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR $USERNAME)
 	fi
+	# Display output to user
+	echo $SAVEFILE
 	# Update gallery
 	$MEDIA_SCAN $SAVEFILE
 
