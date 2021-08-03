@@ -78,7 +78,7 @@ elif [[ $URL == *"instagram.com"* ]]; then
 		# Display that line of the output
 		echo $line
 		# If the line contains the start of the file paths
-		if [[ $line == $PHOTO_DIR* ]]
+		if [[ $line == $PHOTO_DIR* ]]; then
 			# Add the line to an array to be scanned
 			SAVEFILES+=$line
 		fi
