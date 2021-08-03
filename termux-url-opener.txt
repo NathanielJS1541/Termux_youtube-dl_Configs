@@ -70,10 +70,13 @@ elif [[ $URL == *"instagram.com"* ]]; then
 		USERNAME=${USERNAME%*/*}
 		OUTPUT=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR $USERNAME)
 	fi
+	# Split the instaloader output into an array using " " as a deliminator
+	OUTPUT_ARRAY=($(echo $OUTPUT | tr " " "\n"))
 	# Cycle through each array element and test whether it is a file paths
 	for ((line = 0; line < ${#OUTPUT[@]}; i++))
 	do
-		echo "${OUTPUT[$line]}"
+		# Display that line of the output
+		echo $line
 		# If the line contains the start of the file paths
 		if [[ "${OUTPUT[$line]}" == $PHOTO_DIR* ]]; then
 			# Add the line to an array to be scanned
