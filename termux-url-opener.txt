@@ -74,6 +74,7 @@ elif [[ $URL == *"instagram.com"* ]]; then
 	OUTPUT_ARRAY=($(echo $OUTPUT | tr " " "\n"))
 	# Cycle through each array element and test whether it is a file paths
 	for line in "${OUTPUT_ARRAY[@]}"
+	do
 		# Display that line of the output
 		echo $line
 		# If the line contains the start of the file paths
