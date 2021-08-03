@@ -70,20 +70,14 @@ elif [[ $URL == *"instagram.com"* ]]; then
 		USERNAME=${USERNAME%*/*}
 		OUTPUT=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR $USERNAME)
 	fi
-	# First, replace any spaces with a different character (¬) to avoid problems when manipulating strings...
-	OUTPUT_ARRAY=($(echo "$OUTPUT" | tr " " "¬"))
-	# Split into an array at each \node
-	OUTPUT_ARRAY=($(echo "${OUTPUT_ARRAY[@]}"))
 	# Cycle through each array element and test whether it is a file paths
-	for line in "${OUTPUT_ARRAY[@]}"
+	for ((line = 0; line < ${#OUTPUT[@]}; i++))
 	do
-		# Display that line of the output after replacing any "¬" back with spaces
-		line=$(echo $line | tr "¬" " ")
-		echo $line
+		echo "${OUTPUT[$line]}"
 		# If the line contains the start of the file paths
-		if [[ $line == $PHOTO_DIR* ]]; then
+		if [[ "${OUTPUT[$line]}" == $PHOTO_DIR* ]]; then
 			# Add the line to an array to be scanned
-			SAVEFILES+=$line
+			SAVEFILES+="${OUTPUT[$line]}"
 		fi
 	done
 	# Update gallery
