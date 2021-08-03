@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -
 
 # Get the URL
 #INPUT=$1
@@ -62,16 +62,32 @@ elif [[ $URL == *"instagram.com"* ]]; then
 	if [[ $URL == *"instagram.com/p/"* ]]; then
 		SHORTCODE=${URL#*/p/*}
 		SHORTCODE=${SHORTCODE%*/*}
-		SAVEFILE=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR -- -$SHORTCODE)
+		OUTPUT=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR -- -$SHORTCODE)
 	# Otherwise, hope that it is a profile
 	else
 		# Remove junk from the end of the URL
 		USERNAME=${URL#*/p/*}
 		USERNAME=${USERNAME%*/*}
-		SAVEFILE=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR $USERNAME)
+		OUTPUT=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR $USERNAME)
 	fi
+	# First, replace any spaces with a different character (¬) to avoid problems when manipulating strings...
+	OUTPUT_ARRAY=($(echo "$OUTPUT" | tr " " "¬"))
+	# Split into an array at each \node
+	OUTPUT_ARRAY=($(echo "${OUTPUT_ARRAY[@]}"))
+	# Cycle through each array element and test whether it is a file paths
+	for line in "${OUTPUT_ARRAY[@]}"
+	do
+		# Display that line of the output after replacing any "¬" back with spaces
+		line=$(echo $line | tr "¬" " ")
+		echo $line
+		# If the line contains the start of the file paths
+		if [[ $line == $PHOTO_DIR* ]]; then
+			# Add the line to an array to be scanned
+			SAVEFILES+=$line
+		fi
+	done
 	# Update gallery
-	$MEDIA_SCAN $SAVEFILE
+	$MEDIA_SCAN $SAVEFILES
 
 # Facebook
 elif [[ $URL == *"facebook.com"* ]] || [[ $URL == *"fb.watch"* ]]; then
