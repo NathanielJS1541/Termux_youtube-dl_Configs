@@ -1,15 +1,14 @@
 #!/bin/bash -
 
 # Get the URL
-#INPUT=$1
 URL=$1
 
 # Find paths to the required programs
-YOUTUBEDL=$(which youtube-dl)
-NODE_ENV=$(which node)
-SPOTIFYDL=$(which spotifydl)
-INSTALOADER=$(which instaloader)
-MEDIA_SCAN=$(which termux-media-scan)
+YOUTUBEDL=$(command -v youtube-dl)
+NODE_ENV=$(command -v node)
+SPOTIFYDL=$(command -v spotifydl)
+INSTALOADER=$(command -v instaloader)
+MEDIA_SCAN=$(command -v termux-media-scan)
 
 # Base Output Paths
 AUDIO_DIR="$HOME/storage/shared/Music"
@@ -58,17 +57,17 @@ elif [[ $URL == *"vm.tiktok.com"* ]]; then
 # Instagram
 elif [[ $URL == *"instagram.com"* ]]; then
 	# For this we use instaloader
-	# Extract the post shortcode, if it is a post
-	if [[ $URL == *"instagram.com/p/"* ]]; then
+	# Extract the post shortcode, if it is a post in the old style or in the case that the link is "new style" with profile name in th URL
+	if [[ $URL == *"instagram.com/p/"* ]] || [[ $URL == *"instagram.com/"*"/p"* ]]; then
 		SHORTCODE=${URL#*/p/*}
 		SHORTCODE=${SHORTCODE%*/*}
-		OUTPUT=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR -- -$SHORTCODE)
+		OUTPUT=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR -- -$SHORTCODE | tee /dev/tty)
 	# Otherwise, hope that it is a profile
 	else
 		# Remove junk from the end of the URL
 		USERNAME=${URL#*/p/*}
 		USERNAME=${USERNAME%*/*}
-		OUTPUT=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR $USERNAME)
+		OUTPUT=$($INSTALOADER +$HOME/bin/instaloader_args.txt --dirname-pattern=$PHOTO_DIR $USERNAME | tee /dev/tty)
 	fi
 	# First, replace any spaces with a different character (¬) to avoid problems when manipulating strings...
 	OUTPUT_ARRAY=($(echo "$OUTPUT" | tr " " "¬"))
@@ -77,9 +76,8 @@ elif [[ $URL == *"instagram.com"* ]]; then
 	# Cycle through each array element and test whether it is a file paths
 	for line in "${OUTPUT_ARRAY[@]}"
 	do
-		# Display that line of the output after replacing any "¬" back with spaces
+		# Isolate that line of the output after replacing any "¬" back with spaces
 		line=$(echo $line | tr "¬" " ")
-		echo $line
 		# If the line contains the start of the file paths
 		if [[ $line == $PHOTO_DIR* ]]; then
 			# Add the line to an array to be scanned
